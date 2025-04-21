@@ -1,0 +1,123 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "AddOpenApiOperationTransformer | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/weatherforecast": {
+      "get": {
+        "tags": [
+          "AddOpenApiOperationTransformer"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "A custom description for the 200 response.",
+            "headers": {
+              "X-Custom-Header": {
+                "description": "A custom header for the 200 response.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AddOpenApiOperationTransformer"
+        ],
+        "operationId": "CreateWeatherForecast",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeatherForecast"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The forecast was created successfully.",
+            "headers": {
+              "Location": {
+                "description": "Location of the created resource.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherForecast"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WeatherForecast": {
+        "required": [
+          "date",
+          "temperatureC",
+          "summary"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "temperatureC": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "summary": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "temperatureF": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "AddOpenApiOperationTransformer"
+    }
+  ]
+}
