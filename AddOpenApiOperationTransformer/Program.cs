@@ -17,54 +17,22 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.AddOpenApiOperationTransformer((operation, context, token) =>
-{
-    operation.Responses["200"].Description = "A custom description for the 200 response.";
-    operation.Responses["200"].Headers["X-Custom-Header"] = new OpenApiHeader
+app.MapGet("/hello", () => "Hello World!")
+    .AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
     {
-        Description = "A custom header for the 200 response.",
-        Required = false,
-        Schema = new OpenApiSchema
-        {
-            Type = JsonSchemaType.String
-        }
-    };
-    return Task.CompletedTask;
-});
+        operation.Responses?["200"].Description = "A cheerful greeting message.";
+        return Task.CompletedTask;
+    });
 
-app.MapPost("/weatherforecast", (WeatherForecast forecast) =>
-{
-    return TypedResults.Created($"/weatherforecast/{forecast.Date}", forecast);
-})
-.WithName("CreateWeatherForecast")
-.WithResponseDescription(201, "The forecast was created successfully.")
-.WithResponseDescription(418, "I'm a teapot.")
-.WithLocationHeader();
+app.MapPost("/todos", (Todo todo) =>
+        TypedResults.Created($"/todos/{todo.Id}", todo))
+    .WithName("CreateTodo")
+    .WithResponseDescription(201, "The todo was created successfully.")
+    .WithLocationHeader();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record Todo(string Id, string Title, bool IsComplete);
 
 // Static class for operation transformers
 public static class ExtensionMethods
@@ -73,7 +41,6 @@ public static class ExtensionMethods
     {
         builder.AddOpenApiOperationTransformer((operation, context, cancellationToken) =>
         {
-            // operation.Responses?.TryGetValue(statusCode.ToString(), out var response);
             var response = operation.Responses?.TryGetValue(statusCode.ToString(), out var r) == true ? r : null;
             // The following line uses the new "null conditional assignment" feature of C# 14
             response?.Description = description;

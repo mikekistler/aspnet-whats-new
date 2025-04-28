@@ -5,46 +5,36 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/weatherforecast": {
+    "/hello": {
       "get": {
         "tags": [
           "AddOpenApiOperationTransformer"
         ],
-        "operationId": "GetWeatherForecast",
         "responses": {
           "200": {
-            "description": "A custom description for the 200 response.",
-            "headers": {
-              "X-Custom-Header": {
-                "description": "A custom header for the 200 response.",
+            "description": "A cheerful greeting message.",
+            "content": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/todos": {
       "post": {
         "tags": [
           "AddOpenApiOperationTransformer"
         ],
-        "operationId": "CreateWeatherForecast",
+        "operationId": "CreateTodo",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WeatherForecast"
+                "$ref": "#/components/schemas/Todo"
               }
             }
           },
@@ -52,7 +42,7 @@
         },
         "responses": {
           "201": {
-            "description": "The forecast was created successfully.",
+            "description": "The todo was created successfully.",
             "headers": {
               "Location": {
                 "description": "Location of the created resource.",
@@ -66,7 +56,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WeatherForecast"
+                  "$ref": "#/components/schemas/Todo"
                 }
               }
             }
@@ -77,39 +67,22 @@
   },
   "components": {
     "schemas": {
-      "WeatherForecast": {
+      "Todo": {
         "required": [
-          "date",
-          "temperatureC",
-          "summary"
+          "id",
+          "title",
+          "isComplete"
         ],
         "type": "object",
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date"
+          "id": {
+            "type": "string"
           },
-          "temperatureC": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
+          "title": {
+            "type": "string"
           },
-          "summary": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "temperatureF": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
-            "format": "int32"
+          "isComplete": {
+            "type": "boolean"
           }
         }
       }
