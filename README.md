@@ -153,16 +153,32 @@ and the resulting OpenAPI document will look like this:
 
 <!-- https://github.com/dotnet/aspnetcore/pull/61313 -->
 
-This release introduces a new implementation of `JsonPatch` based on `System.Text.Json` serialization.
-This enhancement provides improved performance and reduced memory usage compared to the legacy `Newtonsoft.Json`-based implementation.
-The new `System.Text.Json`-based `JsonPatch` is faster and more memory-efficient, making it an excellent choice for high-performance applications.
-This feature aligns with modern .NET practices by leveraging the `System.Text.Json` library, which is optimized for .NET.
-
-JSON Patch is a standard format for describing changes to a JSON document, defined in RFC 6902.
+JSON Patch is a standard format for describing changes to apply to a JSON document, defined in [RFC 6902].
 It represents a sequence of operations (e.g., add, remove, replace, move, copy, test) that can be applied to modify a JSON document.
 In web applications, JSON Patch is commonly used in a PATCH operation to perform partial updates of a resource.
 Instead of sending the entire resource for an update, clients can send a JSON Patch document containing only the changes.
 This reduces payload size and improves efficiency.
+
+[RFC 6902]: https://tools.ietf.org/html/rfc6902
+
+This release introduces a new implementation of `JsonPatch` based on `System.Text.Json` serialization.
+This feature aligns with modern .NET practices by leveraging the `System.Text.Json` library, which is optimized for .NET.
+This feature provides improved performance and reduced memory usage compared to the legacy `Newtonsoft.Json`-based implementation.
+
+The following benchmarks compare the performance of the new `System.Text.Json` implementation with the legacy `Newtonsoft.Json` implementation:
+
+| Scenario                   | Implementation         | Mean       | Allocated Memory |
+|----------------------------|------------------------|------------|------------------|
+| **Application Benchmarks** | Newtonsoft.JsonPatch   | 271.924 µs | 25 KB            |
+|                            | System.Text.JsonPatch  | 1.584 µs   | 3 KB             |
+| **Deserialization Benchmarks** | Newtonsoft.JsonPatch | 19.261 µs  | 43 KB            |
+|                            | System.Text.JsonPatch  | 7.917 µs   | 7 KB             |
+
+These benchmarks highlight significant performance gains and reduced memory usage with the new implementation.
+
+Notes:
+- The new implementation is not a drop-in replacement for the legacy implementation. In particular, the new implementation doesn't support dynamic types (like `ExpandoObject`).
+- The JSON Patch standard has inherent security risks. Since these risks are inherent to the JSON Patch standard, the new implementation does not attempt to mitigate them. It is the responsibility of the developer to ensure that the JSON Patch document is safe to apply to the target object. See the [Mitigating Security Risks](#mitigating-security-risks) section for more information.
 
 ### Usage
 
@@ -309,19 +325,55 @@ Console.WriteLine(JsonSerializer.Serialize(person, serializerOptions));
 // }
 ```
 
+### Mitigating Security Risks
 
-### Performance Improvements
+When using the .JsonPatch[.SystemTextJson] package, it is critical to understand and mitigate potential security risks.
+Below are the identified threats along with their corresponding mitigations to ensure secure usage of the package.
 
-The following benchmarks compare the performance of the new `System.Text.Json` implementation with the legacy `Newtonsoft.Json` implementation:
+> [!IMPORTANT]
+> This is not an exhaustive list of threats. Application developers must conduct their own threat model reviews to determine an application-specific comprehensive list and come up with appropriate mitigations as needed. For example, applications which expose collections to patch operations should consider the potential for algorithmic complexity attacks if those operations insert or remove elements at the beginning of the collection.
 
-| Scenario                   | Implementation         | Mean       | Allocated Memory |
-|----------------------------|------------------------|------------|------------------|
-| **Application Benchmarks** | Newtonsoft.JsonPatch   | 271.924 µs | 25 KB            |
-|                            | System.Text.JsonPatch  | 1.584 µs   | 3 KB             |
-| **Deserialization Benchmarks** | Newtonsoft.JsonPatch | 19.261 µs  | 43 KB            |
-|                            | System.Text.JsonPatch  | 7.917 µs   | 7 KB             |
+By running comprehensive threat models for their own applications and addressing identified threats while following the recommended mitigations below, consumers of these packages can safely integrate JSON Patch functionality into their applications while minimizing security risks.
 
-These benchmarks highlight significant performance gains and reduced memory usage with the new implementation.
+#### Denial of Service (DoS) via Memory Amplification
+
+**Scenario**: A malicious client submits a `copy` operation that duplicates large object graphs multiple times, leading to excessive memory consumption.
+**Impact**: Potential Out-Of-Memory (OOM) conditions, causing service disruptions.
+**Mitigation**:
+- Validate incoming JSON Patch documents for size and structure before applying the document before calling `ApplyTo` method.
+- The validation will need to be application specific, of course, but an example validation can look something like the following:
+
+```csharp
+public void Validate(JsonPatchDocument<T> patch)
+{
+    // This is just an example. It's up to the developer to make sure that this case is handled properly,
+    // based on the application needs.
+    if (patch.Operations.Where(op=>op.OperationType == OperationType.Copy).Count() > MaxCopyOperationsCount)
+    {
+        throw new InvalidOperationException();
+    }
+}
+```
+
+#### Business Logic Subversion
+
+**Scenario**: Patch operations can manipulate fields with implicit invariants (e.g., internal flags, IDs, or computed fields), violating business constraints.
+**Impact**: Data integrity issues and unintended application behavior.
+**Mitigation**:
+- Use POCO objects with explicitly defined properties that are safe to modify.
+- Avoid exposing sensitive or security-critical properties in the target object.
+- If no POCO object is used, validate the patched object after applying operations to ensure business rules and invariants are not violated.
+
+> [!IMPORTANT]
+> One difference in behavior in with the System.Text.Json-serializer is that JsonPatch library relies on the runtime type information during patching. This means, that when applying a patch to (for example) a list of Employee objects, and there are items which are of type derieved from the Employee type, a patch request can target these specific type properties and modify them as needed.
+
+#### Authentication and Authorization
+
+**Scenario**: Unauthenticated or unauthorized clients send malicious JSON Patch requests.
+**Impact**: Unauthorized access to modify sensitive data or disrupt application behavior.
+**Mitigation**:
+- Protect endpoints accepting JSON Patch requests with proper authentication and authorization mechanisms.
+- Restrict access to trusted clients or users with appropriate permissions.
 
 ## Support for generating OpenApiSchemas in transformers
 <!-- https://github.com/dotnet/aspnetcore/pull/61050 -->
