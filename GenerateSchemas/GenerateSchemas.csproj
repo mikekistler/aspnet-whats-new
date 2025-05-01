@@ -6,8 +6,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)</OpenApiDocumentsDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <Target Name="AddOpenApiDependencies" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <AdditionalFiles
+            Include="@(ReferencePath->'%(RootDir)%(Directory)%(Filename).xml')"
+            Condition="'%(ReferencePath.Filename)' == 'Microsoft.AspNetCore.Http.Abstractions'"
+            KeepMetadata="Identity;HintPath" />
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.4.25227.102" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-preview.4.*" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0-preview.4.25229.110">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
