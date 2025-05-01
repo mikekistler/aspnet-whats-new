@@ -4,14 +4,22 @@ What's new in ASP.NET Core preview 4.
 
 <!-- https://github.com/dotnet/AspNetCore.Docs/issues/35217 -->
 
+<!-- https://github.com/dotnet/aspnetcore/pulls?q=is%3Apr+milestone%3A10.0-preview4+is%3Aclosed+label%3Aarea-minimal%2Carea-mvc -->
+
 - New `WithOpenApiOperationTransformer` extension method for `IEndpointRouteBuilder` to add OpenAPI operation metadata to endpoints.
   - This was actually added in preview 3 but the docs were not updated.
 - Support for generating OpenApiSchemas in transformers
 - Support for JSON Patch with System.Text.Json
+  - https://github.com/dotnet/aspnetcore/pull/61313
 - Various bug fixes to the XML comment generator -- it should throw fewer build errors now.
 It should also work with the Identity API XML comments but I haven't verified that.
+Maybe update docs about failure mode.
 - Some bug fixes on the validations generator.
+-   Fix validations on record types.
 - Support for IOpenApiDocumentProvider in the DI container. Makes it so that you can generate an OpenAPIDocument in-memory from anywhere.
+  - This addresses some issues filed by users.
+
+- OpenAPI.NET updated to Preview.17
 
 ## Enhanced OpenAPI Support with Operation Transformers
 
@@ -138,3 +146,175 @@ and the resulting OpenAPI document will look like this:
       }
     }
 ```
+
+## New JsonPatch Implementation with System.Text.Json
+
+This release introduces a new implementation of `JsonPatch` based on `System.Text.Json` serialization.
+This enhancement provides improved performance and reduced memory usage compared to the legacy `Newtonsoft.Json`-based implementation.
+The new `System.Text.Json`-based `JsonPatch` is faster and more memory-efficient, making it an excellent choice for high-performance applications.
+This feature aligns with modern .NET practices by leveraging the `System.Text.Json` library, which is optimized for .NET.
+
+JSON Patch is a standard format for describing changes to a JSON document, defined in RFC 6902.
+It represents a sequence of operations (e.g., add, remove, replace, move, copy, test) that can be applied to modify a JSON document.
+In web applications, JSON Patch is commonly used in a PATCH operation to perform partial updates of a resource.
+Instead of sending the entire resource for an update, clients can send a JSON Patch document containing only the changes.
+This reduces payload size and improves efficiency.
+
+### Usage
+
+To enable JSON Patch support with `System.Text.Json`, install the `Microsoft.AspNetCore.JsonPatch.SystemTextJson` NuGet package.
+
+```sh
+dotnet add package Microsoft.AspNetCore.JsonPatch.SystemTextJson --prerelease
+```
+
+This package provides a `JsonPatchDocument<T>` class to represent a JSON Patch document for objects of type `T`
+and custom logic for serializing and deserializing JSON Patch documents using `System.Text.Json`.
+The key method of the `JsonPatchDocument<T>` class is `ApplyTo`, which applies the patch operations to a target object of type `T`.
+
+The following examples demonstrate how to use the `ApplyTo` method to apply a JSON Patch document to an object.
+
+### Example: Applying a JsonPatchDocument
+
+The following example demonstrates:
+1. The "add", "replace", and "remove" operations.
+2. Operations on nested properties.
+3. Adding a new item to an array.
+4. Using a JSON String Enum Converter in a JSON patch document.
+
+```csharp
+// Original object
+var person = new Person {
+    FirstName = "John",
+    LastName = "Doe",
+    Email = "johndoe@gmail.com",
+    PhoneNumbers = [new() {Number = "123-456-7890", Type = PhoneNumberType.Mobile}],
+    Address = new Address
+    {
+        Street = "123 Main St",
+        City = "Anytown",
+        State = "TX"
+    }
+};
+
+// Raw JSON patch document
+string jsonPatch = """
+[
+    { "op": "replace", "path": "/FirstName", "value": "Jane" },
+    { "op": "remove", "path": "/Email"},
+    { "op": "add", "path": "/Address/ZipCode", "value": "90210" },
+    { "op": "add", "path": "/PhoneNumbers/-", "value": { "Number": "987-654-3210", "Type": "Work" } }
+]
+""";
+
+// Deserialize the JSON patch document
+var patchDoc = JsonSerializer.Deserialize<JsonPatchDocument<Person>>(jsonPatch);
+
+// Apply the JSON patch document
+patchDoc!.ApplyTo(person);
+
+// Output updated object
+Console.WriteLine(JsonSerializer.Serialize(person, serializerOptions));
+
+// Output:
+// {
+//   "firstName": "Jane",
+//   "lastName": "Doe",
+//   "address": {
+//     "street": "123 Main St",
+//     "city": "Anytown",
+//     "state": "TX",
+//     "zipCode": "90210"
+//   },
+//   "phoneNumbers": [
+//     {
+//       "number": "123-456-7890",
+//       "type": "Mobile"
+//     },
+//     {
+//       "number": "987-654-3210",
+//       "type": "Work"
+//     }
+//   ]
+// }
+```
+
+### Example: Applying a JsonPatchDocument with error handling
+
+There are a variety of errors that can occur when applying a JSON Patch document.
+For example, the target object may not have the specified property, or the value specified may be incompatible with the property type.
+JSON Patch also supports the `test` operation, which checks if a specified value is equal to the target property,
+and if not, this is considered an error.
+
+The following example demonstrates how to handle these errors gracefully.
+
+> Important: The object passed to the `ApplyTo` method is modified in place. It is the caller's
+> responsiblity to discard these changes if any operation fails.
+
+```csharp
+// Original object
+var person = new Person {
+    FirstName = "John",
+    LastName = "Doe",
+    Email = "johndoe@gmail.com"
+};
+
+// Raw JSON patch document
+string jsonPatch = """
+[
+    { "op": "replace", "path": "/Email", "value": "janedoe@gmail.com"},
+    { "op": "test", "path": "/FirstName", "value": "Jane" },
+    { "op": "replace", "path": "/LastName", "value": "Smith" }
+]
+""";
+
+// Deserialize the JSON patch document
+var patchDoc = JsonSerializer.Deserialize<JsonPatchDocument<Person>>(jsonPatch);
+
+// Apply the JSON patch document, catching any errors
+Dictionary<string, string[]>? errors = null;
+patchDoc!.ApplyTo(person, jsonPatchError =>
+    {
+        errors ??= new ();
+        var key = jsonPatchError.AffectedObject.GetType().Name;
+        if (!errors.ContainsKey(key))
+        {
+            errors.Add(key, new string[] { });
+        }
+        errors[key] = errors[key].Append(jsonPatchError.ErrorMessage).ToArray();
+    });
+if (errors != null)
+{
+    // Print the errors
+    foreach (var error in errors)
+    {
+        Console.WriteLine($"Error in {error.Key}: {string.Join(", ", error.Value)}");
+    }
+}
+
+// Output updated object
+Console.WriteLine(JsonSerializer.Serialize(person, serializerOptions));
+
+// Output:
+// Error in Person: The current value 'John' at path 'FirstName' is not equal to the test value 'Jane'.
+// {
+//   "firstName": "John",
+//   "lastName": "Smith",              <<< Modified!
+//   "email": "janedoe@gmail.com",     <<< Modified!
+//   "phoneNumbers": []
+// }
+```
+
+
+### Performance Improvements
+
+The following benchmarks compare the performance of the new `System.Text.Json` implementation with the legacy `Newtonsoft.Json` implementation:
+
+| Scenario                   | Implementation         | Mean       | Allocated Memory |
+|----------------------------|------------------------|------------|------------------|
+| **Application Benchmarks** | Newtonsoft.JsonPatch   | 271.924 µs | 25 KB            |
+|                            | System.Text.JsonPatch  | 1.584 µs   | 3 KB             |
+| **Deserialization Benchmarks** | Newtonsoft.JsonPatch | 19.261 µs  | 43 KB            |
+|                            | System.Text.JsonPatch  | 7.917 µs   | 7 KB             |
+
+These benchmarks highlight significant performance gains and reduced memory usage with the new implementation.
