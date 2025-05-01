@@ -6,24 +6,26 @@ What's new in ASP.NET Core preview 4.
 
 <!-- https://github.com/dotnet/aspnetcore/pulls?q=is%3Apr+milestone%3A10.0-preview4+is%3Aclosed+label%3Aarea-minimal%2Carea-mvc -->
 
-- New `WithOpenApiOperationTransformer` extension method for `IEndpointRouteBuilder` to add OpenAPI operation metadata to endpoints.
-  - This was actually added in preview 3 but the docs were not updated.
-- Support for generating OpenApiSchemas in transformers
-- Support for JSON Patch with System.Text.Json
-  - https://github.com/dotnet/aspnetcore/pull/61313
-- Various bug fixes to the XML comment generator -- it should throw fewer build errors now.
-It should also work with the Identity API XML comments but I haven't verified that.
-Maybe update docs about failure mode.
-- Some bug fixes on the validations generator.
--   Fix validations on record types.
-- Support for IOpenApiDocumentProvider in the DI container. Makes it so that you can generate an OpenAPIDocument in-memory from anywhere.
-  - This addresses some issues filed by users.
+Here's a summary of what's new in ASP.NET Core in this preview release:
 
-- OpenAPI.NET updated to Preview.17
+- [Enhanced OpenAPI Support with Operation Transformers](#enhanced-openapi-support-with-operation-transformers)
+
+- [New JsonPatch Implementation with System.Text.Json](#new-jsonpatch-implementation-with-systemtextjson)
+
+- [Support for generating OpenApiSchemas in transformers](#support-for-generating-openapischemas-in-transformers)
+
+- [Improvements to XML comment generator](#improvements-to-xml-comment-generator)
+
+- [Improvements to Minimal APIs Validation](#improvements-to-minimal-apis-validation)
+
+- [Support for IOpenApiDocumentProvider in the DI container](#support-for-iopenapidocumentprovider-in-the-di-container)
+
+- [OpenAPI.NET updated to Preview.17](#openapinet-updated-to-preview17)
 
 ## Enhanced OpenAPI Support with Operation Transformers
 
 <!-- https://github.com/dotnet/aspnetcore/pull/60566 -->
+<!-- This was actually added in preview 3 but the docs were not updated. -->
 
 The new `AddOpenApiOperationTransformer` API makes it easier to customize OpenAPI documentation for your ASP.NET Core endpoints. This API allows you to register custom operation transformers, which modify OpenAPI operation definitions programmatically.
 This feature reduces the need for manual intervention or external tools, streamlining the API documentation process.
@@ -148,6 +150,8 @@ and the resulting OpenAPI document will look like this:
 ```
 
 ## New JsonPatch Implementation with System.Text.Json
+
+<!-- https://github.com/dotnet/aspnetcore/pull/61313 -->
 
 This release introduces a new implementation of `JsonPatch` based on `System.Text.Json` serialization.
 This enhancement provides improved performance and reduced memory usage compared to the legacy `Newtonsoft.Json`-based implementation.
@@ -318,3 +322,32 @@ The following benchmarks compare the performance of the new `System.Text.Json` i
 |                            | System.Text.JsonPatch  | 7.917 µs   | 7 KB             |
 
 These benchmarks highlight significant performance gains and reduced memory usage with the new implementation.
+
+## Support for generating OpenApiSchemas in transformers
+<!-- https://github.com/dotnet/aspnetcore/pull/61050 -->
+
+## Improvements to XML comment generator
+<!-- https://github.com/dotnet/aspnetcore/pull/61193 -->
+
+it should throw fewer build errors now.
+- It should also work with the Identity API XML comments but I haven't verified that.
+  - Maybe update docs about failure mode.
+
+## Improvements to Minimal APIs Validation
+
+<!-- https://github.com/dotnet/aspnetcore/pull/61402 -->
+
+Now supports validation on record types.
+
+## Support for IOpenApiDocumentProvider in the DI container.
+
+<!-- https://github.com/dotnet/aspnetcore/pull/61463 -->
+
+Makes it so that you can generate an OpenAPIDocument in-memory from anywhere.
+
+## OpenAPI.NET updated to Preview.17
+
+<!-- https://github.com/dotnet/aspnetcore/pull/61541 -->
+
+<!-- Preview.3 used OpenAPI.NET v2-preview.11 -->
+
