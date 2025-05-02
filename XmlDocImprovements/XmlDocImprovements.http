@@ -1,0 +1,6 @@
+@XmlDocImprovements_HostAddress = http://localhost:5104
+
+GET {{XmlDocImprovements_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
