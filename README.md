@@ -177,7 +177,9 @@ The following benchmarks compare the performance of the new `System.Text.Json` i
 These benchmarks highlight significant performance gains and reduced memory usage with the new implementation.
 
 Notes:
-- The new implementation is not a drop-in replacement for the legacy implementation. In particular, the new implementation doesn't support dynamic types (like `ExpandoObject`).
+- The new implementation is not a drop-in replacement for the legacy implementation. In particular:
+  - The new implementation doesn't support dynamic types (like `ExpandoObject`).
+  - The new implementation uses the declared type of the target object to determine the properties to patch, and not the runtime type as was the case with the   legacy implementation.
 - The JSON Patch standard has inherent security risks. Since these risks are inherent to the JSON Patch standard, the new implementation does not attempt to mitigate them. It is the responsibility of the developer to ensure that the JSON Patch document is safe to apply to the target object. See the [Mitigating Security Risks](#mitigating-security-risks) section for more information.
 
 ### Usage
@@ -363,9 +365,6 @@ public void Validate(JsonPatchDocument<T> patch)
 - Use POCO objects with explicitly defined properties that are safe to modify.
 - Avoid exposing sensitive or security-critical properties in the target object.
 - If no POCO object is used, validate the patched object after applying operations to ensure business rules and invariants are not violated.
-
-> [!IMPORTANT]
-> One difference in behavior in with the System.Text.Json-serializer is that JsonPatch library relies on the runtime type information during patching. This means, that when applying a patch to (for example) a list of Employee objects, and there are items which are of type derieved from the Employee type, a patch request can target these specific type properties and modify them as needed.
 
 #### Authentication and Authorization
 
