@@ -1,0 +1,6 @@
+@OpenApiDocumentProvider_HostAddress = http://localhost:5029
+
+GET {{OpenApiDocumentProvider_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

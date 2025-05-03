@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateSchemas", "Generate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlDocImprovements", "XmlDocImprovements\XmlDocImprovements.csproj", "{DE2967C5-C4EB-405A-BA93-3D0000CCCC45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiDocumentProvider", "OpenApiDocumentProvider\OpenApiDocumentProvider.csproj", "{30E987F6-B6E8-479A-95AA-8F0107E4571C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{DE2967C5-C4EB-405A-BA93-3D0000CCCC45}.Release|x64.Build.0 = Release|Any CPU
 		{DE2967C5-C4EB-405A-BA93-3D0000CCCC45}.Release|x86.ActiveCfg = Release|Any CPU
 		{DE2967C5-C4EB-405A-BA93-3D0000CCCC45}.Release|x86.Build.0 = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|x64.Build.0 = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Debug|x86.Build.0 = Debug|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|x64.ActiveCfg = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|x64.Build.0 = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|x86.ActiveCfg = Release|Any CPU
+		{30E987F6-B6E8-479A-95AA-8F0107E4571C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
