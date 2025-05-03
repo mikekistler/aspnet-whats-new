@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -31,7 +33,8 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast");
+.WithName("GetWeatherForecast")
+.Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
 app.Run();
 
