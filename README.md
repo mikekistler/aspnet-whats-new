@@ -339,11 +339,11 @@ By running comprehensive threat models for their own applications and addressing
 
 #### Denial of Service (DoS) via Memory Amplification
 
-**Scenario**: A malicious client submits a `copy` operation that duplicates large object graphs multiple times, leading to excessive memory consumption.
-**Impact**: Potential Out-Of-Memory (OOM) conditions, causing service disruptions.
-**Mitigation**:
-- Validate incoming JSON Patch documents for size and structure before applying the document before calling `ApplyTo` method.
-- The validation will need to be application specific, of course, but an example validation can look something like the following:
+- **Scenario**: A malicious client submits a `copy` operation that duplicates large object graphs multiple times, leading to excessive memory consumption.
+- **Impact**: Potential Out-Of-Memory (OOM) conditions, causing service disruptions.
+- **Mitigation**:
+  - Validate incoming JSON Patch documents for size and structure before applying the document before calling `ApplyTo` method.
+  - The validation will need to be application specific, of course, but an example validation can look something like the following:
 
 ```csharp
 public void Validate(JsonPatchDocument<T> patch)
@@ -359,20 +359,20 @@ public void Validate(JsonPatchDocument<T> patch)
 
 #### Business Logic Subversion
 
-**Scenario**: Patch operations can manipulate fields with implicit invariants (e.g., internal flags, IDs, or computed fields), violating business constraints.
-**Impact**: Data integrity issues and unintended application behavior.
-**Mitigation**:
-- Use POCO objects with explicitly defined properties that are safe to modify.
-- Avoid exposing sensitive or security-critical properties in the target object.
-- If no POCO object is used, validate the patched object after applying operations to ensure business rules and invariants are not violated.
+- **Scenario**: Patch operations can manipulate fields with implicit invariants (e.g., internal flags, IDs, or computed fields), violating business constraints.
+- **Impact**: Data integrity issues and unintended application behavior.
+- **Mitigation**:
+  - Use POCO objects with explicitly defined properties that are safe to modify.
+  - Avoid exposing sensitive or security-critical properties in the target object.
+  - If no POCO object is used, validate the patched object after applying operations to ensure business rules and invariants are not violated.
 
 #### Authentication and Authorization
 
-**Scenario**: Unauthenticated or unauthorized clients send malicious JSON Patch requests.
-**Impact**: Unauthorized access to modify sensitive data or disrupt application behavior.
-**Mitigation**:
-- Protect endpoints accepting JSON Patch requests with proper authentication and authorization mechanisms.
-- Restrict access to trusted clients or users with appropriate permissions.
+- **Scenario**: Unauthenticated or unauthorized clients send malicious JSON Patch requests.
+- **Impact**: Unauthorized access to modify sensitive data or disrupt application behavior.
+- **Mitigation**:
+  - Protect endpoints accepting JSON Patch requests with proper authentication and authorization mechanisms.
+  - Restrict access to trusted clients or users with appropriate permissions.
 
 ## Support for generating OpenApiSchemas in transformers
 <!-- https://github.com/dotnet/aspnetcore/pull/61050 -->
