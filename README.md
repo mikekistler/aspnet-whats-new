@@ -179,7 +179,6 @@ These benchmarks highlight significant performance gains and reduced memory usag
 Notes:
 - The new implementation is not a drop-in replacement for the legacy implementation. In particular:
   - The new implementation doesn't support dynamic types (like `ExpandoObject`).
-  - The new implementation uses the declared type of the target object to determine the properties to patch, and not the runtime type as was the case with the   legacy implementation.
 - The JSON Patch standard has inherent security risks. Since these risks are inherent to the JSON Patch standard, the new implementation does not attempt to mitigate them. It is the responsibility of the developer to ensure that the JSON Patch document is safe to apply to the target object. See the [Mitigating Security Risks](#mitigating-security-risks) section for more information.
 
 ### Usage
@@ -260,6 +259,11 @@ Console.WriteLine(JsonSerializer.Serialize(person, serializerOptions));
 //   ]
 // }
 ```
+
+The `ApplyTo` method generally follow the conventions and options of System.Text.Json for processing the JsonPatchDocument, including the behavior controlled by the following options:
+- `NumberHandling` - whether numeric properties can be read from strings
+- `PropertyNameCaseInsensitive` - whether property names are case-sensitive
+However, one important difference is that `ApplyTo` uses the runtime type of the target object to determine the properties to patch, rather than the declared type, as is the case with System.Text.Json deserialization.
 
 ### Example: Applying a JsonPatchDocument with error handling
 
