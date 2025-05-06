@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Writers;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.OpenApi.Models;
 
 const string documentName = "v1";
 
@@ -11,12 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(documentName);
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
 app.UseHttpsRedirection();
 
@@ -39,26 +34,28 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-if (args.Any(arg => arg.Equals("--generate-openapi")))
+app.MapGet("/openapi/{documentName}.json", async Task<Results<Ok<string>, NotFound<ProblemDetails>>> (string documentName) =>
 {
     var documentProvider = app.Services.GetRequiredKeyedService<IOpenApiDocumentProvider>(documentName);
+    if (documentProvider == null)
+    {
+        return TypedResults.NotFound<ProblemDetails>(new (){
+            Detail = $"OpenAPI document '{documentName}' not found."
+        });
+    }
 
     var document = await documentProvider.GetOpenApiDocumentAsync();
 
-    // Serialize the OpenAPI document to disk.
-    var path = $"{documentName}.json";
-    using var fileStream = new FileStream(path, FileMode.Create);
-    using var writer = new StreamWriter(fileStream);
-    var jsonWriter = new OpenApiJsonWriter(writer);
-    await document.SerializeAsync(jsonWriter, Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_1);
-    await writer.FlushAsync();
+    var stream = new MemoryStream();
+    var writer = new StreamWriter(stream);
+    document.SerializeAsV3(new Microsoft.OpenApi.Writers.OpenApiJsonWriter(writer));
+    writer.Flush();
+    stream.Position = 0;
+    var doc = new StreamReader(stream).ReadToEnd();
+    doc = doc.Replace("\\n", "\n");
 
-    writer.Dispose();
-    fileStream.Dispose();
-
-    Console.WriteLine($"OpenAPI document generated at {path}");
-    return;
-}
+    return TypedResults.Ok(doc);
+});
 
 app.Run();
 
