@@ -23,7 +23,8 @@ Here's a summary of what's new in ASP.NET Core in this preview release:
 <!-- https://github.com/dotnet/aspnetcore/pull/61728 Fix handling of parsable types in validations generator -->
 
 A number of small improvements and fixes have been made to the validation generator for Minimal APIs that was introduced in preview 4.
-In addition, all the validation-related types have been marked as experimental, but validation using existing data annotations and the `AddValidation()` method is still considered stable.
+
+To support future work in the space, the underlying validation resolver APIs used to support minimal API validation have been marked as experimental. However, the top-level `AddValidation` APIs and the built-in validation filter are non-experimental.
 
 ## Support for generating OpenAPI 3.1
 
