@@ -20,6 +20,7 @@ Here's a summary of what's new in ASP.NET Core in this preview release:
 - [Enhance validation for classes and records](#enhance-validation-for-classes-and-records)
 - [Fix ProducesResponseType Description for Minimal APIs](#fix-producesresponsetype-description-for-minimal-apis)
 - [Correct metadata type for formdata enum parameters](#correct-metadata-type-for-formdata-enum-parameters)
+- [Unify handling of documentation IDs in OpenAPI XML comment generator](#unify-handling-of-documentation-ids-in-openapi-xml-comment-generator)
 
 ## Upgrade Microsoft.OpenApi to 2.0.0
 
@@ -51,3 +52,10 @@ The Description property for the `ProducesResponseType` attribute is now correct
 The metadata type for formdata enum parameters in MVC controller actions has been updated to use the actual enum type instead of string.
 
 ** Community contribution: Thanks to @ascott18 **
+
+## Unify handling of documentation IDs in OpenAPI XML comment generator
+
+<!-- https://github.com/dotnet/aspnetcore/pull/62692 -->
+
+XML documentation comments from referenced assemblies are now correctly merged if their documentation IDs included return type suffixes.
+As a result, all valid XML comments are now reliably included in generated OpenAPI documentation, improving doc accuracy and completeness for APIs using referenced assemblies.
