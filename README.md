@@ -20,7 +20,8 @@ Here's a summary of what's new in ASP.NET Core in this RC release:
 - [Fixes/improvements to schema reference resolution](#fixesimprovements-to-schema-reference-resolution)
 - [Include property descriptions as siblings of $ref in OpenAPI schema](#include-property-descriptions-as-siblings-of-ref-in-openapi-schema)
 - [Exclude unknown HTTP methods from OpenAPI](#exclude-unknown-http-methods-from-openapi)
-- [Apply the correct media type for JSON Patch](#apply-the-correct-media-type-for-json-patch)
+- [Improve the description of JSON Patch request bodies](#improve-the-description-of-json-patch-request-bodies)
+- [Use invariant culture for OpenAPI document generation](#use-invariant-culture-for-openapi-document-generation)
 
 ## Model nullable types using oneOf in OpenAPI schema
 
