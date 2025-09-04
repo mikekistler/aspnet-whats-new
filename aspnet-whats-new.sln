@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaDescriptions", "SchemaDescriptions\SchemaDescriptions.csproj", "{4C5DF9EF-8E1F-4178-9848-4A38B6235F42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryMethod", "QueryMethod\QueryMethod.csproj", "{C8772715-2110-4816-B0DE-5E51D6C5929F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{4C5DF9EF-8E1F-4178-9848-4A38B6235F42}.Release|x64.Build.0 = Release|Any CPU
 		{4C5DF9EF-8E1F-4178-9848-4A38B6235F42}.Release|x86.ActiveCfg = Release|Any CPU
 		{4C5DF9EF-8E1F-4178-9848-4A38B6235F42}.Release|x86.Build.0 = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|x64.Build.0 = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8772715-2110-4816-B0DE-5E51D6C5929F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
