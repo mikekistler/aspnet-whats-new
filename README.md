@@ -19,9 +19,11 @@ Here's a summary of what's new in ASP.NET Core in this RC release:
 - [Model nullable types using oneOf in OpenAPI schema](#model-nullable-types-using-oneof-in-openapi-schema)
 - [Fixes/improvements to schema reference resolution](#fixesimprovements-to-schema-reference-resolution)
 - [Include property descriptions as siblings of $ref in OpenAPI schema](#include-property-descriptions-as-siblings-of-ref-in-openapi-schema)
+- [Add metadata from XML comments on `[AsParameters]` types to OpenAPI schema](#add-metadata-from-xml-comments-on-asparameters-types-to-openapi-schema)
 - [Exclude unknown HTTP methods from OpenAPI](#exclude-unknown-http-methods-from-openapi)
 - [Improve the description of JSON Patch request bodies](#improve-the-description-of-json-patch-request-bodies)
 - [Use invariant culture for OpenAPI document generation](#use-invariant-culture-for-openapi-document-generation)
+- [Skip Validation Attribute](#skip-validation-attribute)
 
 ## Model nullable types using oneOf in OpenAPI schema
 
@@ -47,6 +49,11 @@ Prior to .NET 10, ASP.NET Core discarded descriptions on properties that were de
 This was necessary because OpenAPI v3.0 did not allow sibling properties alongside `$ref` in schema definitions. But this restriction has been relaxed in OpenAPI 3.1, allowing descriptions to be included alongside `$ref`. Support was added in RC1 to include property descriptions as siblings of `$ref` in the generated OpenAPI schema.
 
 This was a community contribution. Thanks @desjoerd!
+
+## Add metadata from XML comments on `[AsParameters]` types to OpenAPI schema
+
+Support has been added for processing XML comments on properties of `[AsParameters]` parameter classes
+to extract metadata for use in OpenAPI documentation generation.
 
 ## Exclude unknown HTTP methods from OpenAPI
 
@@ -75,3 +82,11 @@ This was a community contribution. Thanks @martincostello!
 OpenAPI document generation now uses invariant culture for formatting numbers and dates in the generated OpenAPI document. This ensures that the generated document is consistent and does not vary based on the server's culture settings.
 
 This was a community contribution. Thanks @martincostello!
+
+## Skip Validation Attribute
+
+<!-- https://github.com/dotnet/aspnetcore/pull/63103 -->
+
+An experimental `[SkipValidation]` attribute has been added to Microsoft.Extensions.Validation that allows developers to opt out of validation for specific properties, method parameters, or entire types. This provides fine-grained control over validation behavior while maintaining the default validation functionality.
+
+This was a community contribution. Thanks @oroztocil!
