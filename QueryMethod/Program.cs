@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc.Routing;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -33,9 +35,28 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapMethods("/query", new[] { "QUERY" }, () => TypedResults.Ok(forecasts(3)))
+    .WithName("QueryWeatherForecast");
+
+app.MapMethods("/foo", new[] { "FOO" }, () => TypedResults.Ok(forecasts(2)))
+    .WithName("FooWeatherForecast");
+
 app.Run();
+
+WeatherForecast[] forecasts(int count) => Enumerable.Range(1, count).Select(index =>
+    new WeatherForecast
+    (
+        DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+        Random.Shared.Next(-20, 55),
+        summaries[Random.Shared.Next(summaries.Length)]
+    ))
+    .ToArray();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
+public class HttpQuery() : HttpMethodAttribute(["QUERY"]);
+
+public class HttpFoo() : HttpMethodAttribute(["FOO"]);

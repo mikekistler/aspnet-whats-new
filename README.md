@@ -19,6 +19,8 @@ Here's a summary of what's new in ASP.NET Core in this RC release:
 - [Model nullable types using oneOf in OpenAPI schema](#model-nullable-types-using-oneof-in-openapi-schema)
 - [Fixes/improvements to schema reference resolution](#fixesimprovements-to-schema-reference-resolution)
 - [Include property descriptions as siblings of $ref in OpenAPI schema](#include-property-descriptions-as-siblings-of-ref-in-openapi-schema)
+- [Exclude unknown HTTP methods from OpenAPI](#exclude-unknown-http-methods-from-openapi)
+- [Apply the correct media type for JSON Patch](#apply-the-correct-media-type-for-json-patch)
 
 ## Model nullable types using oneOf in OpenAPI schema
 
@@ -47,7 +49,28 @@ This was a community contribution. Thanks @desjoerd!
 
 ## Exclude unknown HTTP methods from OpenAPI
 
-<!-- https://github.com/dotnet/aspnetcore/pull/63034 -->
+<!-- https://github.com/dotnet/aspnetcore/pull/63034, https://github.com/dotnet/aspnetcore/pull/63092 -->
 
 OpenAPI schema generation now excludes unknown HTTP methods from the generated OpenAPI document.
-In particular,
+In particular, query methods, which are standard HTTP methods but not recognized by OpenAPI,
+are now gracefully excluded from the generated OpenAPI document.
+
+This was a community contribution. Thanks @martincostello!
+
+## Improve the description of JSON Patch request bodies
+
+<!-- https://github.com/dotnet/aspnetcore/pull/62988 -->
+<!-- https://github.com/dotnet/aspnetcore/pull/63052 -->
+
+The OpenAPI schema generation for JSON Patch operations now correctly applies the `application/json-patch+json` media type to request bodies that use JSON Patch. This ensures that the generated OpenAPI document accurately reflects the expected media type for JSON Patch operations.
+In addition, the JSON Patch request body has a detailed schema that describes the structure of the JSON Patch document, including the operations that can be performed.
+
+This was a community contribution. Thanks @martincostello!
+
+## Use invariant culture for OpenAPI document generation
+
+<!-- https://github.com/dotnet/aspnetcore/pull/62193 -->
+
+OpenAPI document generation now uses invariant culture for formatting numbers and dates in the generated OpenAPI document. This ensures that the generated document is consistent and does not vary based on the server's culture settings.
+
+This was a community contribution. Thanks @martincostello!
