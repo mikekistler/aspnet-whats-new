@@ -1,6 +1,6 @@
 @SchemaDescriptions_HostAddress = http://localhost:5145
 
-GET {{SchemaDescriptions_HostAddress}}/weatherforecast/
+GET {{SchemaDescriptions_HostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###
