@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,30 +14,27 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.MapPost("/", (DescribedInlinedSchemasDto dto) => { });
+
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+[Description("Class: DescribedInlinedSchemasDto")]
+public class DescribedInlinedSchemasDto
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    [Description("Property: DescribedInlinedSchemasDto.Inlined1")]
+    public DescribedInlinedDto Inlined1 { get; set; }
+
+    [Description("Property: DescribedInlinedSchemasDto.Inlined2")]
+    public DescribedInlinedDto Inlined2 { get; set; }
+
+    public DescribedInlinedDto InlinedNoDescription { get; set; }
+}
+
+[Description("Class: DescribedInlinedDto")]
+public class DescribedInlinedDto
+{
+    [Description("Property: DescribedInlinedDto.ChildValue")]
+    public string ChildValue { get; set; }
 }

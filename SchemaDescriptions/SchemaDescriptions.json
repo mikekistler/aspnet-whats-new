@@ -1,0 +1,67 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "SchemaDescriptions | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "post": {
+        "tags": [
+          "SchemaDescriptions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DescribedInlinedSchemasDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DescribedInlinedDto": {
+        "type": "object",
+        "properties": {
+          "childValue": {
+            "type": "string",
+            "description": "Property: DescribedInlinedDto.ChildValue"
+          }
+        },
+        "description": "Class: DescribedInlinedDto"
+      },
+      "DescribedInlinedSchemasDto": {
+        "type": "object",
+        "properties": {
+          "inlined1": {
+            "description": "Property: DescribedInlinedSchemasDto.Inlined1",
+            "$ref": "#/components/schemas/DescribedInlinedDto"
+          },
+          "inlined2": {
+            "description": "Property: DescribedInlinedSchemasDto.Inlined2",
+            "$ref": "#/components/schemas/DescribedInlinedDto"
+          },
+          "inlinedNoDescription": {
+            "$ref": "#/components/schemas/DescribedInlinedDto"
+          }
+        },
+        "description": "Class: DescribedInlinedSchemasDto"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "SchemaDescriptions"
+    }
+  ]
+}
