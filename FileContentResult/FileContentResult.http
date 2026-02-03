@@ -1,0 +1,13 @@
+@FileContentResult_HostAddress = http://localhost:5062
+
+#if (EnableOpenAPI)
+GET {{FileContentResult_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+#endif
+
+GET {{FileContentResult_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
