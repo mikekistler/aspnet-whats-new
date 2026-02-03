@@ -14,5 +14,7 @@ Here's a summary of what's new in ASP.NET Core in this preview release:
 
 <!-- https://github.com/dotnet/aspnetcore/pull/63504 -->
 
-The framework now supports generating OpenAPI schemas for `FileContentResult` in ASP.NET Core Web APIs.
-The schema for `FileContentResult` is generated as `type: string, format: binary`.
+The framework now supports generating OpenAPI schemas for [FileContentResult] in ASP.NET Core Web APIs.
+The schema for [FileContentResult] is generated as `type: string, format: binary`.
+
+[FileContentResult]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.filecontentresult
