@@ -1,16 +1,26 @@
 @HostAddress = http://localhost:5062
 
-GET {{HostAddress}}/openapi/v1.json
+GET {{HostAddress}}/openapi/v1.yaml
 Accept: application/json
 
 ###
 
-POST {{HostAddress}}/File/filecontentresult
+POST {{HostAddress}}/api/filecontentresult
 Accept: application/octet-stream
 
 ###
 
-GET {{HostAddress}}/File/filecontentresult-full
+GET {{HostAddress}}/api/filecontentresult-full
+Accept: text/plain
+
+###
+
+POST {{HostAddress}}/filecontentresult
+Accept: application/octet-stream
+
+###
+
+GET {{HostAddress}}/filecontentresult-full
 Accept: text/plain
 
 ###

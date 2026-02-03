@@ -6,7 +6,7 @@ namespace MyApp.Controllers;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
 [ApiController]
-[Route("[controller]")]
+[Route("api")]
 public class FileController : ControllerBase
 {
     // This is the endpoint in the tests
