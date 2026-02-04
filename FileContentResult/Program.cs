@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +26,9 @@ app.MapControllers();
 app.MapPost("/filecontentresult", () =>
 {
     var content = "This endpoint returns a FileContentResult!"u8.ToArray();
-    return TypedResults.Bytes(content);
+    return TypedResults.File(content);
 })
-.Produces<byte[]>(StatusCodes.Status200OK, MediaTypeNames.Application.Octet);
+.Produces<FileContentResult>(contentType: MediaTypeNames.Application.Octet);
 
 app.MapGet("/filecontentresult-full", () =>
 {
@@ -40,6 +41,6 @@ app.MapGet("/filecontentresult-full", () =>
         lastModified: new DateTimeOffset(2026, 1, 15, 10, 30, 0, TimeSpan.Zero),
         entityTag: new Microsoft.Net.Http.Headers.EntityTagHeaderValue("\"unique-etag-value\""));
 })
-.Produces<string>(StatusCodes.Status200OK, MediaTypeNames.Text.Plain);
+.Produces<FileContentResult>(contentType: MediaTypeNames.Text.Plain);
 
 app.Run();
