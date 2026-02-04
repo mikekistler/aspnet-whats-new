@@ -63,6 +63,8 @@ public IActionResult PostFileContentResult()
 
 This operation will have the same OpenAPI description as shown above.
 
+Thanks to @marcominerva for contributing this change!
+
 [FileContentResult]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.filecontentresult
 [Produces\<T\>]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.http.openapiroutehandlerbuilderextensions.produces?view=aspnetcore-10.0#microsoft-aspnetcore-http-openapiroutehandlerbuilderextensions-produces-1(microsoft-aspnetcore-builder-routehandlerbuilder-system-int32-system-string-system-string())
 [ProducesResponseType\<T\>]: https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.producesresponsetypeattribute-1?view=aspnetcore-10.0
