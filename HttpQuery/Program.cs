@@ -1,8 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+builder.Services.AddOpenApi(options =>
+{
+    // Specify the OpenAPI version to use.
+    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_2;
+});
 
 var app = builder.Build();
 
@@ -14,28 +18,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapMethods("/search", ["QUERY"], (SearchRequest request) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    return TypedResults.Ok(new { Message = $"You searched for: {request.Query}" });
+});
 
-app.MapGet("/weatherforecast", () =>
+// Other HTTP methods can be mapped using MapMethods as well, but these won't be generated into the OpenAPI document.
+app.MapMethods("/notify", ["NOTIFY"], (NotifyRequest request) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    return TypedResults.Ok(new { Message = $"You notified: {request.Message}" });
+});
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record SearchRequest(string Query);
+record NotifyRequest(string Message);

@@ -1,11 +1,18 @@
-@HttpQuery_HostAddress = http://localhost:5254
+@HostAddress = http://localhost:5254
 
-GET {{HttpQuery_HostAddress}}/openapi/v1.json
+GET {{HostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###
 
-GET {{HttpQuery_HostAddress}}/weatherforecast/
+# The VSCode REST Client extension does not yet support the QUERY method, so this won't work yet.
+
+QUERY {{HostAddress}}/search/
 Accept: application/json
+Content-Type: application/json
+
+{
+  "query": "ASP.NET Core"
+}
 
 ###
