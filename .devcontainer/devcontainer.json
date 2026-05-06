@@ -1,22 +1,11 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
-	"name": "C# (.NET) Nightly",
-    "build": {
-        "dockerfile": "./Dockerfile",
-        "context": "."
-    },
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-dotnettools.csdevkit",
-				"humao.rest-client",
-				"42Crunch.vscode-openapi",
-				"stoplight.spectral",
-				"ms-dotnettools.dotnet-interactive-vscode"
-			]
-		}
+	"name": "C# (.NET) .NET 11 Preview 4",
+	"build": {
+		"dockerfile": "Dockerfile"
 	}
+
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
@@ -35,6 +24,16 @@
 
 	// Configure tool-specific properties.
 	// "customizations": {},
+	,"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csdevkit",
+				"humao.rest-client",
+				"42Crunch.vscode-openapi",
+				"stoplight.spectral"
+			]
+		}
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
