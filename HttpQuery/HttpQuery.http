@@ -5,6 +5,12 @@ Accept: application/json
 
 ###
 
+# Swagger UI is available at http://localhost:5254/swagger/index.html
+
+# Scalar API Reference is available at http://localhost:5254/scalar/v1
+
+###
+
 # The VSCode REST Client extension does not yet support the QUERY method, so this won't work yet.
 
 QUERY {{HostAddress}}/search/
